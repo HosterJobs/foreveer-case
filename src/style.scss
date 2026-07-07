@@ -1,0 +1,93 @@
+.custom-scrollbar {
+  scrollbar-width: thin;
+  /* Для Firefox */
+  scrollbar-color: #06817880 transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(6, 129, 120, 0.4);
+  border-radius: 10px;
+}
+
+@keyframes autoScrollPage {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(calc(-100% + 677px));
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+animate-scroll {
+  animation: autoScrollPage 25s ease-in-out infinite;
+}
+
+.group:hover .animate-scroll {
+  animation-play-state: paused;
+}
+
+@keyframes drawLine {
+  from {
+    stroke-dashoffset: 350;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fadeInArrow {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Новая анимация для плавного появления картинки адреса */
+@keyframes fadeInAddressImg {
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1); /* Сохраняем твой left-1/2 центрирующий сдвиг */
+  }
+}
+
+/* В базовом состоянии анимации не запускаются */
+.animated-svg-line {
+  stroke-dasharray: 350;
+  stroke-dashoffset: 350;
+}
+
+.animated-svg-arrow {
+  opacity: 0;
+}
+
+.animated-address {
+  opacity: 0;
+  transform: translate(-50%, 15px) scale(0.98); /* Легкий эффект вылета снизу для красоты */
+  transition: transform 0.5s ease-out;
+}
+
+/* Запуск анимаций СТРОГО после активации скроллом (.is-active) */
+.is-active .animated-svg-line {
+  animation: drawLine 2s ease-in-out forwards;
+}
+
+.is-active .animated-svg-arrow {
+  animation: fadeInArrow 0.3s ease-out 1.7s forwards;
+}
+
+/* Картинка адреса начинает появляться на 2.0s (сразу после стрелки) и плавно проявляется за 0.5s */
+.is-active .animated-address {
+  animation: fadeInAddressImg 0.5s ease-out 2s forwards;
+}
