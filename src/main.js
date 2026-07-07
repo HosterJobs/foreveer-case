@@ -131,3 +131,49 @@ document.addEventListener("DOMContentLoaded", () => {
         observer.observe(connectionBlock);
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. ПОЯВЛЕНИЕ ПРИ СКРОЛЛЕ (вместо старого скрипта с id)
+    const triggerBox = document.querySelector('.additional-trigger-box');
+    
+    if (triggerBox) {
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    obs.unobserve(entry.target); // прекращаем слежку после активации
+                }
+            });
+        }, { threshold: 0.15 });
+
+        observer.observe(triggerBox);
+    }
+
+    // 2. МЯГКИЙ ПАРАЛЛАКС ДЛЯ ВЕРХНЕГО ОКНА (только для десктопов от 1024px)
+    const parallaxItem = document.querySelector('.parallax-layer');
+    
+    if (parallaxItem && triggerBox) {
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth >= 1024) {
+                const rect = triggerBox.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+
+                // Проверяем, находится ли контейнер в зоне видимости
+                if (rect.top < windowHeight && rect.bottom > 0) {
+                    // Вычисляем, насколько глубоко проскроллен блок (от 0 до значения высоты окна)
+                    const scrolledDistance = windowHeight - rect.top;
+                    
+                    // Коэффициент скорости параллакса (0.05 — легкое, контролируемое движение)
+                    const speed = 0.05; 
+                    const translateY = scrolledDistance * speed;
+
+                    // Применяем смещение, сохраняя hover эффекты масштабирования
+                    parallaxItem.style.transform = `translateY(${translateY}px)`;
+                }
+            } else {
+                // Сбрасываем стили на мобильных устройствах
+                parallaxItem.style.transform = '';
+            }
+        });
+    }
+});
