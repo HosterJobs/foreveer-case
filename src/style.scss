@@ -91,3 +91,39 @@ animate-scroll {
 .is-active .animated-address {
   animation: fadeInAddressImg 0.5s ease-out 2s forwards;
 }
+
+/* Стили для анимации появления */
+.animate-on-scroll {
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Настройка длительности и типа анимации */
+  will-change: opacity, transform; /* Оптимизация производительности */
+}
+
+/* Начальное состояние: скрыто слева */
+.-hidden-left {
+  opacity: 0;
+  transform: translateX(-50px); /* Смещение влево на 50px (можно настроить) */
+}
+
+/* Состояние появления: видимо и на своем месте */
+.animate-on-scroll.appear {
+  opacity: 1;
+  transform: translateX(0); /* Возвращение в исходное положение */
+}
+
+/* Базовый transition для всплывающих окон */
+.animate-order, .animate-address {
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Когда весь блок появился (добавился класс .appear), запускаем всплытие окон */
+.animate-on-scroll.appear .animate-order {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 200ms; /* Всплывает чуть позже общего выезда */
+}
+
+.animate-on-scroll.appear .animate-address {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 600ms; /* Всплывает строго после окна "заказать продукт" */
+}

@@ -177,3 +177,76 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const animatedElements = document.querySelectorAll('.animate-on-scroll');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1 // Сработает, когда 10% изображения покажется на экране
+  };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Убираем классы скрытия и сдвига, возвращая в дефолтное состояние
+        entry.target.classList.remove('opacity-0', '-translate-x-12');
+        observer.unobserve(entry.target); // Отключаем слежку после срабатывания
+      }
+    });
+  }, observerOptions);
+
+  animatedElements.forEach(element => {
+    observer.observe(element);
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const animatedElements = document.querySelectorAll('.animate-on-scroll');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.15 
+  };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  animatedElements.forEach(element => {
+    observer.observe(element);
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const animatedContainers = document.querySelectorAll('.animate-on-scroll');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.15 // Сработает, когда 15% блока покажется на экране
+  };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Убираем скрытие общего контейнера и добавляем маркер appear
+        entry.target.classList.remove('opacity-0', '-translate-x-12');
+        entry.target.classList.add('appear');
+        
+        observer.unobserve(entry.target); // Срабатывает один раз
+      }
+    });
+  }, observerOptions);
+
+  animatedContainers.forEach(container => {
+    observer.observe(container);
+  });
+});
