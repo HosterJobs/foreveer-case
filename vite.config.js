@@ -1,45 +1,38 @@
 import { defineConfig } from 'vite'
 import injectHTML from 'vite-plugin-html-inject'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
+import path from 'path'
 
 export default defineConfig({
   base: './',
   plugins: [
-    injectHTML(),
-    // Плагин заставит Vite собирать и логировать файлы из public/img
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'public/img/**/*',
-          dest: 'img'
-        },
-        {
-          src: 'public/favicon.svg',
-          dest: '.'
-        },
-        {
-          src: 'public/icons.svg',
-          dest: '.'
-        }
-      ],
-      // Включаем отображение скопированных файлов в консоли
-      structured: true
-    })
+    injectHTML()
   ],
   build: {
-    // Отключаем стандартное тихое копирование папки public, 
-    // чтобы файлы не копировались дважды
-    copyPublicDir: false, 
     rollupOptions: {
       output: {
+        // Настройка для JS файлов
         entryFileNames: 'js/[name]-[hash].js',
         chunkFileNames: 'js/[name]-[hash].js',
+        
+        // Настройка для стилей (CSS) и статичных ассетов (изображений)
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name.split('.');
           const extType = info[info.length - 1];
+
+          // Если это CSS файл
           if (extType === 'css') {
             return 'css/[name]-[hash].[ext]';
           }
+
+          // Если это изображения (картинки, иконки, фавиконки)
+          if (/\.(png|jpe?g|gif|svg|webp|ico)$/i.test(assetInfo.name)) {
+            // Проверяем, если структура путей уже заложена в имени (например из public)
+            // и убираем дублирование папки img, если она уже есть в начале
+            const relativePath = assetInfo.name.replace(/^img\//, '');
+            return `img/${relativePath}`;
+          }
+
+          // Для всех остальных ассетов (шрифты и т.д.) по умолчанию
           return 'assets/[name]-[hash].[ext]';
         }
       }
